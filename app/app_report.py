@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import *
+from tkinter import END, messagebox, ttk
 from tkinter.ttk import *
 from tkcalendar import DateEntry
 
@@ -25,7 +25,7 @@ class AppReport(tk.Tk):
         print("App report")
 
         # Casilla fecha inicio (buscar)
-        tk.Label(self,text="From:").grid(row = 0, column = 1, sticky = W,padx = 15, pady = 2)
+        tk.Label(self,text="From:").grid(row = 0, column = 1, sticky = tk.W, padx = 15, pady = 2)
         self.txFromDate=DateEntry(self, selectmode='day', date_pattern='yyyy-MM-dd', width=casilla_width-5)
         self.txFromDate.grid(row = 0, column = 2, pady = 2)
 
@@ -72,30 +72,34 @@ class AppReport(tk.Tk):
         from_date = self.txFromDate.get_date()
         to_date = self.txToDate.get_date()
 
-        repairs = self.repair.getFoliosInDateRange(from_date, to_date)
-        
-        self.clear_table()
+        if from_date <= to_date:
 
-        tk.Label(self.report_content, text="Folio").grid(row=0, column=0, sticky="W", padx=10, pady=2)
-        tk.Label(self.report_content, text="Date").grid(row=0, column=1, sticky="W", padx=30, pady=2)
-        tk.Label(self.report_content, text="Detail").grid(row=0, column=2, sticky="W", padx=150, pady=2)
-        tk.Label(self.report_content, text="Part").grid(row=0, column=3, sticky="W", padx=50, pady=2)
-        tk.Label(self.report_content, text="Amount").grid(row=0, column=4, sticky="W", padx=5, pady=2)
-        
-        # Comenzar desde la segunda fila
-        row = 1  
-
-        # Muestra cada folio encontrado
-        for repair in repairs:
+            repairs = self.repair.getFoliosInDateRange(from_date, to_date)
             
-            part_desc = self.part.lookForPartId(repair[1][2])[1]
+            self.clear_table()
 
-            tk.Label(self.report_content, text=repair[0][0]).grid(row=row, column=0, sticky="W", padx=20, pady=10)
-            tk.Label(self.report_content, text=repair[0][2]).grid(row=row, column=1, sticky="W", padx=10, pady=2)
-            tk.Label(self.report_content, text=repair[1][0]).grid(row=row, column=2, sticky="W", padx=10, pady=2)
-            tk.Label(self.report_content, text=part_desc).grid(row=row, column=3, sticky="W", padx=10, pady=2)
-            tk.Label(self.report_content, text=repair[1][3]).grid(row=row, column=4, sticky="W", padx=30, pady=2)
-            row += 1
+            tk.Label(self.report_content, text="Folio").grid(row=0, column=0, sticky="W", padx=10, pady=2)
+            tk.Label(self.report_content, text="Date").grid(row=0, column=1, sticky="W", padx=30, pady=2)
+            tk.Label(self.report_content, text="Detail").grid(row=0, column=2, sticky="W", padx=150, pady=2)
+            tk.Label(self.report_content, text="Part").grid(row=0, column=3, sticky="W", padx=50, pady=2)
+            tk.Label(self.report_content, text="Amount").grid(row=0, column=4, sticky="W", padx=5, pady=2)
+            
+            # Comenzar desde la segunda fila
+            row = 1  
+
+            # Muestra cada folio encontrado
+            for repair in repairs:
+                
+                part_desc = self.part.lookForPartId(repair[1][2])[1]
+
+                tk.Label(self.report_content, text=repair[0][0]).grid(row=row, column=0, sticky="W", padx=20, pady=10)
+                tk.Label(self.report_content, text=repair[0][2]).grid(row=row, column=1, sticky="W", padx=10, pady=2)
+                tk.Label(self.report_content, text=repair[1][0]).grid(row=row, column=2, sticky="W", padx=10, pady=2)
+                tk.Label(self.report_content, text=part_desc).grid(row=row, column=3, sticky="W", padx=10, pady=2)
+                tk.Label(self.report_content, text=repair[1][3]).grid(row=row, column=4, sticky="W", padx=30, pady=2)
+                row += 1
+        else:
+            messagebox.showwarning("Error", "Unvalid date range")
         
     def clear_table(self):
         for widget in self.report_content.winfo_children():

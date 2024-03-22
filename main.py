@@ -7,6 +7,8 @@
 ### Para correr el programa se necesita ejecutar en cmd:
 ###     python -m pip install mysql-connector-python
 ###     python.exe -m pip install --upgrade pip
+###     python -m pip install tkinter
+###     python -m pip install tkcalendar
 
 ### Todos los print() son para verificar la ejecución del código
 
